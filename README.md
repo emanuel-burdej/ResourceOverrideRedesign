@@ -1,34 +1,21 @@
-# Resource Override
+# ResourceOverrideRedesign
 
-## !!! Development on RO has stopped indefinitely !!!
+Redesign of the unfinished [Resource Override MV3](https://github.com/kylepaulsen/ResourceOverride/tree/mv3) branch.
 
-If you still need to override stuff - see how chrome can override content natively: https://www.youtube.com/watch?v=KxjGYcHZ_uI
+Redirect, replace, edit, or inject web content. See [`CHANGELOG.md`](CHANGELOG.md) for what’s new in this fork.
 
-You can try to use my half baked [MV3 branch here](https://github.com/kylepaulsen/ResourceOverride/tree/mv3), but it is untested and I won't be supporting it.
+## How to install
 
-I don't plan to work on RO anymore so it's very unlikly this will ever be
-finished. I'm not the biggest fan of what MV3 is forcing upon
-people, so I don't have very much motivation to finish this.
-Additionally, most modern web development doesn't really need/work
-with an extension like this, and even if there are use cases,
-Chrome supports overriding content natively within their debug
-tools: https://www.youtube.com/watch?v=KxjGYcHZ_uI
+1. Download the **ZIP** from this repository’s **latest release** (GitHub → Releases).
+2. Unzip it somewhere on your computer.
+3. Open Chrome → **Extensions** (`chrome://extensions`).
+4. Turn on **Developer mode**.
+5. Click **Load unpacked** and select the unzipped folder.
+6. **Pin** the extension from the Chrome toolbar puzzle icon.
 
-Anyway, I apologize if this is disappointing news. You are welcome
-to build the extension yourself or use the source code in other
-ways, as it is under the MIT license. Maybe someday I will really
-wish I finished this and have a bad need for it - but until that
-day, this will be my last commit.
+## License
 
-Thanks everyone for using RO.
+MIT — see [`LICENSE`](LICENSE).
 
-I wish you the best.
-
-### Old Readme text:
-
-Resource Override is an extension to help you gain full control of any website by redirecting traffic, replacing, editing, or inserting new content.
-
-[Get the chrome extension here](https://chrome.google.com/webstore/detail/resource-override/pkoacgokdfckfpndoffpifphamojphii).
-
-### Now on firefox!
-[Get the FireFox extension here](https://addons.mozilla.org/en-US/firefox/addon/resourceoverride/)
+Original work © 2014 [Kyle Paulsen](https://github.com/kylepaulsen).  
+Fork changes © 2026 the fork contributors.

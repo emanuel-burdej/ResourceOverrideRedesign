@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ResourceOverrideRedesign</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/on-off-switch.css">
+<style>
+    #appShell {
+        --accent: #087f8c;
+        --accent-hover: #066b76;
+        --border: #d8e0e6;
+        --muted: #60717d;
+        --surface: #ffffff;
+        --text: #24323a;
+        --title: #21343c;
+        --page-bg: #f5f7f9;
+        --rule-bg: #f8fafb;
+        --rule-border: #e5eaee;
+        --input-bg: #ffffff;
+        --input-border: #c9d3da;
+        --btn-bg: #ffffff;
+        --btn-border: #c7d1d8;
+        --btn-text: #31434c;
+        --btn-hover-bg: #f0f4f6;
+        --disabled-bg: #eef2f4;
+        --disabled-border: #cbd4da;
+        --disabled-accent: #8c9aa3;
+        --disabled-rule-bg: #e4e9ec;
+        --popover-shadow: 0 10px 28px rgba(28, 48, 58, 0.16);
+        --accent-soft: rgba(8, 127, 140, 0.12);
+        --card-shadow: 0 2px 8px rgba(28, 48, 58, 0.06);
+        --input-shadow: none;
+        --danger: #a13a43;
+        --danger-hover-bg: #fbecee;
+        --danger-hover-border: #f1cdd1;
+        --on-surface: #ffffff;
+        --on-border: #b7d8dd;
+        --on-glow: 0 2px 10px rgba(8, 127, 140, 0.12);
+        --menu-divider: #b8c4ce;
+        min-height: 100vh;
+        padding: 14px 16px 20px;
+        color: var(--text);
+        background: var(--page-bg);
+    }
+
+    html.popupMode #appShell {
+        min-height: 0;
+        height: auto;
+        max-height: none;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        padding: 0 10px 10px;
+        overflow: visible;
+        box-sizing: border-box;
+    }
+
+    /* Compact density for popup */
+    html.popupMode #appHeader {
+        gap: 10px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    html.popupMode #appShell #title {
+        min-height: 24px;
+        padding-left: 30px;
+        background-size: 22px 22px;
+    }
+
+    html.popupMode #appShell #title h1 {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.15;
+    }
+
+    html.popupMode #appShell #helpAndOptions {
+        gap: 8px;
+    }
+
+    html.popupMode #appShell #headerMenuBtn {
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
+    }
+
+    html.popupMode #appShell #headerMenuDropdown .headerMenuItem {
+        height: 30px;
+        font-size: 11px;
+    }
+
+    html.popupMode #appShell #helpAndOptions .headerActionBtn {
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
+    }
+
+    html.popupMode #appShell #expandAllGroupsBtn .expandCollapseIcon {
+        width: 14px;
+        height: 14px;
+    }
+
+    html.popupMode #appShell .domainContainer {
+        grid-template-columns: 14px 1fr;
+        column-gap: 4px;
+        margin-bottom: 6px;
+        padding: 6px 8px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        border-left-width: 3px;
+    }
+
+    html.popupMode #appShell .domainContainer > .groupHandle {
+        margin: 0;
+        font-size: 11px;
+    }
+
+    html.popupMode #appShell .domainHeader {
+        min-height: 30px;
+        padding: 0;
+    }
+
+    html.popupMode #appShell .domainContainer.collapsed .domainHeader {
+        padding-bottom: 0;
+    }
+
+    html.popupMode #appShell .domainHeader .domainText {
+        flex-basis: 40px;
+        font-size: 11px;
+    }
+
+    html.popupMode #appShell .btn {
+        height: 28px;
+        padding: 0 8px;
+        border-radius: 6px;
+        font-size: 11px;
+    }
+
+    html.popupMode #appShell .sym-btn {
+        font-size: 20px;
+        line-height: 26px;
+    }
+
+    html.popupMode #appShell input:not([type="checkbox"]),
+    html.popupMode #appShell select {
+        height: 28px;
+        padding: 0 7px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    html.popupMode #appShell .overrideRules {
+        margin: 6px 0 0 4px;
+    }
+
+    html.popupMode #appShell .ruleContainer {
+        margin: 3px 0;
+        padding: 3px 4px;
+        border-radius: 6px;
+    }
+
+    html.popupMode #appShell #addDomain {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 6px;
+    }
+
+    html.popupMode #appShell #addDomainBtn .addDomainIcon {
+        width: 17px;
+        height: 17px;
+    }
+
+    #appShell .onoffswitch {
+        --toggle-track-on: var(--accent);
+    }
+
+    html.popupMode #appShell .onoffswitch {
+        width: 50px;
+    }
+
+    html.popupMode #appShell .onoffswitch-track {
+        width: 50px;
+        height: 22px;
+    }
+
+    html.popupMode #appShell input[type="checkbox"].onoffswitch-checkbox {
+        width: 50px;
+        height: 22px;
+    }
+
+    html.popupMode #appShell .onoffswitch-thumb {
+        width: 16px;
+        height: 16px;
+    }
+
+    html.popupMode #appShell .onoffswitch-text {
+        font-size: 8px;
+    }
+
+    html.popupMode #appShell .onoffswitch-text-on {
+        left: 7px;
+    }
+
+    html.popupMode #appShell .onoffswitch-text-off {
+        right: 5px;
+    }
+
+    html.popupMode #appShell .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-thumb {
+        transform: translateX(28px);
+    }
+
+    #appShell.darkMode {
+        color-scheme: dark;
+        --accent: #5bc4cf;
+        --accent-hover: #74d0d9;
+        --accent-soft: rgba(91, 196, 207, 0.28);
+        --border: #3f434a;
+        --muted: #a4aab2;
+        --surface: #33363c;
+        --text: #f2f3f5;
+        --title: #f7f8f9;
+        --page-bg: #2a2c31;
+        --rule-bg: #3a3d44;
+        --rule-border: #4a4e56;
+        --input-bg: #3a3d44;
+        --input-border: #8b919a;
+        --input-shadow: 1px 1px 0 rgba(0, 0, 0, 0.28);
+        --btn-bg: #3a3d44;
+        --btn-border: #555a63;
+        --btn-text: #f2f3f5;
+        --btn-hover-bg: #454951;
+        --disabled-bg: #2f3238;
+        --disabled-border: #3f434a;
+        --disabled-accent: #6b717a;
+        --disabled-rule-bg: #32353b;
+        --danger: #f07178;
+        --danger-hover-bg: rgba(240, 113, 120, 0.14);
+        --danger-hover-border: rgba(240, 113, 120, 0.32);
+        --popover-shadow: 0 14px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+        --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 8px 20px rgba(0, 0, 0, 0.2);
+        --on-surface: #35383f;
+        --on-border: #4a6a70;
+        --on-glow: 0 0 0 1px rgba(91, 196, 207, 0.2), 0 6px 18px rgba(0, 0, 0, 0.22);
+        --menu-divider: #686e78;
+    }
+
+    body.darkMode {
+        color-scheme: dark;
+        background: #2a2c31;
+        color: #f2f3f5;
+    }
+
+    #appHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    #appShell #title,
+    #appShell #helpAndOptions {
+        float: none;
+        margin: 0;
+    }
+
+    #appShell #title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 28px;
+        padding-left: 34px;
+        background-position: left center;
+        background-size: 24px 24px;
+    }
+
+    #appShell #title h1 {
+        margin: 0;
+        color: var(--title);
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        line-height: 1.15;
+    }
+
+    #appShell #helpAndOptions {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    #appShell #headerMenuBtn,
+    #appShell #expandAllGroupsBtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        min-width: 30px;
+        height: 30px;
+        padding: 0;
+        color: var(--muted);
+    }
+
+    #appShell #headerMenuBtn:hover,
+    #appShell #expandAllGroupsBtn:hover {
+        color: var(--text);
+    }
+
+    #appShell #headerMenuBtn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    #appShell #headerMenuBtn svg circle {
+        fill: currentColor;
+    }
+
+    #appShell #headerMenuDropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
+        min-width: 220px;
+        padding: 4px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: var(--popover-shadow);
+        z-index: 60;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuItem {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        height: 32px;
+        padding: 0 10px;
+        color: var(--text);
+        background: transparent;
+        border: 0;
+        border-radius: 6px;
+        box-shadow: none;
+        font-size: 12px;
+        font-weight: 500;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuItem:hover {
+        background: var(--btn-hover-bg);
+    }
+
+    #appShell #headerMenuDropdown .headerMenuIcon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuIcon path,
+    #appShell #headerMenuDropdown .headerMenuIcon circle,
+    #appShell #headerMenuDropdown .headerMenuIcon line,
+    #appShell #headerMenuDropdown .headerMenuIcon polyline {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuToggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-height: 32px;
+        padding: 0 10px;
+        color: var(--text);
+        cursor: default;
+    }
+
+    #appShell #headerMenuDropdown .menuPillToggle {
+        position: relative;
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    #appShell #headerMenuDropdown .menuPillToggle-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    #appShell #headerMenuDropdown .menuPillToggle-track {
+        position: relative;
+        display: block;
+        width: 38px;
+        height: 22px;
+        border-radius: 999px;
+        background: #8a9199;
+        transition: background-color 0.2s ease;
+    }
+
+    #appShell #headerMenuDropdown .menuPillToggle-thumb {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #f2f3f5;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    #appShell #headerMenuDropdown .menuPillToggle-input:checked + .menuPillToggle-track {
+        background: var(--accent);
+    }
+
+    #appShell #headerMenuDropdown .menuPillToggle-input:checked + .menuPillToggle-track .menuPillToggle-thumb {
+        transform: translateX(16px);
+        background: #ffffff;
+    }
+
+    #appShell #headerMenuDropdown .menuPillToggle-input:focus-visible + .menuPillToggle-track {
+        outline: 2px solid var(--accent-soft);
+        outline-offset: 2px;
+    }
+
+    #appShell.darkMode #headerMenuDropdown .menuPillToggle-track {
+        background: #555a63;
+    }
+
+    #appShell.darkMode #headerMenuDropdown .menuPillToggle-thumb {
+        background: #d8dce0;
+    }
+
+    #appShell.darkMode #headerMenuDropdown .menuPillToggle-input:checked + .menuPillToggle-track {
+        background: var(--accent);
+    }
+
+    #appShell.darkMode #headerMenuDropdown .menuPillToggle-input:checked + .menuPillToggle-track .menuPillToggle-thumb {
+        background: #ffffff;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuToggleMain {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuToggleLabel {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuItem span {
+        white-space: nowrap;
+    }
+
+    #appShell #headerMenuDropdown .headerMenuDivider {
+        display: block;
+        flex-shrink: 0;
+        height: 0;
+        margin: 6px 8px;
+        border-top: 1px solid var(--menu-divider);
+        background: none;
+    }
+
+    #appShell #openDetailBtn {
+        display: flex;
+    }
+
+    #appShell #openDetailBtn .openDetailIcon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
+
+    #appShell #openDetailBtn .openDetailIcon path,
+    #appShell #openDetailBtn .openDetailIcon polyline,
+    #appShell #openDetailBtn .openDetailIcon line {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    #appShell #expandAllGroupsBtn .expandCollapseIcon {
+        width: 16px;
+        height: 16px;
+        display: none;
+        flex-shrink: 0;
+    }
+
+    #appShell #expandAllGroupsBtn .expandCollapseIcon path {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    #appShell #expandAllGroupsBtn[data-mode="expand"] .iconExpand,
+    #appShell #expandAllGroupsBtn[data-mode="collapse"] .iconCollapse {
+        display: block;
+    }
+
+    #appShell #domainDefs {
+        margin-top: 0;
+    }
+
+    #appShell .domainContainer {
+        display: grid;
+        grid-template-columns: 16px 1fr;
+        column-gap: 5px;
+        margin-bottom: 8px;
+        padding: 8px 10px;
+        overflow: hidden;
+        background: var(--on-surface);
+        border: 1px solid var(--on-border);
+        border-left: 3px solid var(--accent);
+        border-radius: 8px;
+        box-shadow: var(--on-glow);
+        cursor: pointer;
+    }
+
+    #appShell .domainContainer > .groupHandle {
+        grid-column: 1;
+        grid-row: 1 / -1;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        color: var(--muted);
+        cursor: grab;
+        user-select: none;
+        font-size: 14px;
+        letter-spacing: -3px;
+        line-height: 1;
+    }
+
+    #appShell .domainContainer > .groupHandle::before {
+        content: "⋮⋮";
+    }
+
+    #appShell .domainContainer > .groupHandle:hover {
+        color: var(--text);
+    }
+
+    #appShell .domainContainer > .groupHandle:active {
+        cursor: grabbing;
+    }
+
+    #appShell .domainContainer > .domainHeader,
+    #appShell .domainContainer > .overrideRules {
+        grid-column: 2;
+        min-width: 0;
+    }
+
+    #appShell .domainContainer:not(.collapsed) {
+        cursor: default;
+    }
+
+    #appShell .domainContainer:not(.collapsed) .domainHeader,
+    #appShell .domainContainer:not(.collapsed) .domainHeader .domainText,
+    #appShell .domainContainer:not(.collapsed) .domainHeader .domain,
+    #appShell .domainContainer:not(.collapsed) .domainHeader .addRule,
+    #appShell .domainContainer:not(.collapsed) .domainHeader .switch,
+    #appShell .domainContainer:not(.collapsed) .domainHeader .copy,
+    #appShell .domainContainer:not(.collapsed) .domainHeader .delete {
+        cursor: pointer;
+    }
+
+    #appShell .domainContainer input:not([type="checkbox"]),
+    #appShell .domainContainer select,
+    #appShell .domainContainer textarea {
+        cursor: text;
+    }
+
+    #appShell .domainContainer .handle {
+        cursor: ns-resize;
+    }
+
+    #appShell .domainContainer .btn,
+    #appShell .domainContainer .onoffswitch,
+    #appShell .domainContainer .onoffswitch-label,
+    #appShell .domainContainer .onoffswitch-checkbox {
+        cursor: pointer;
+    }
+
+    #appShell .domainContainer.disabled {
+        background: var(--disabled-bg);
+        border-color: var(--disabled-border);
+        border-left-color: var(--disabled-accent);
+        border-left-width: 3px;
+        box-shadow: none;
+    }
+
+    #appShell .domainContainer.disabled > .domainHeader {
+        opacity: 0.55;
+    }
+
+    #appShell .domainContainer.disabled > .domainHeader .domainText {
+        color: var(--disabled-accent);
+    }
+
+    #appShell .domainContainer.disabled .domainHeader {
+        border-bottom-color: var(--disabled-border);
+    }
+
+    #appShell.darkMode .domainContainer.disabled > .domainHeader {
+        opacity: 0.5;
+    }
+
+    #appShell .domainContainer.disabled .overrideRules,
+    #appShell .domainContainer.disabled .ruleContainer {
+        opacity: 1;
+        filter: none;
+    }
+
+    #appShell .ruleContainer.disabled {
+        opacity: 1;
+    }
+
+    #appShell .domainHeader {
+        display: flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+    }
+
+    #appShell .domainHeader .domainText {
+        flex: 0 0 48px;
+        display: flex;
+        align-items: center;
+        padding-top: 0;
+        color: var(--muted);
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    #appShell .domainHeader .domain {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        margin: 0;
+    }
+    #appShell .domainHeader .addRule,
+    #appShell .domainHeader .switch,
+    #appShell .domainHeader .copy,
+    #appShell .domainHeader .delete {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    #appShell .domainHeader .addRule,
+    #appShell .domainHeader .switch {
+        justify-content: center;
+    }
+
+    #appShell .domainHeader .delete {
+        justify-content: flex-end;
+    }
+
+    #appShell .domainHeader input:not([type="checkbox"]) {
+        cursor: text;
+    }
+
+    #appShell .domainHeader .btn,
+    #appShell .domainHeader .copyGroupBtn,
+    #appShell .domainHeader .onoffswitch,
+    #appShell .domainHeader .onoffswitch-label,
+    #appShell .domainHeader .onoffswitch-checkbox {
+        cursor: pointer;
+    }
+
+    #appShell .domainHeader .copy {
+        justify-content: center;
+        flex: 0 0 30px;
+    }
+
+    #appShell .domainHeader .copyGroupBtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
+        padding: 0;
+        color: var(--muted);
+        background: transparent;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    #appShell .domainHeader .copyGroupBtn:hover {
+        color: var(--text);
+        background: var(--btn-hover-bg);
+        border-color: var(--border);
+    }
+
+    #appShell .domainHeader .copyGroupBtn .copyGroupIcon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
+
+    #appShell .domainHeader .copyGroupBtn .copyGroupIcon rect,
+    #appShell .domainHeader .copyGroupBtn .copyGroupIcon path {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    #appShell .domainHeader .copyGroupBtn .copyGroupSuccessIcon {
+        display: none;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+
+    #appShell .domainHeader .copyGroupBtn .copyGroupSuccessIcon path {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    #appShell .domainHeader .copyGroupBtn.is-success {
+        color: #2e8b3a;
+        background: rgba(46, 139, 58, 0.12);
+        border-color: rgba(46, 139, 58, 0.35);
+        pointer-events: none;
+    }
+
+    #appShell .domainHeader .copyGroupBtn.is-success .copyGroupIcon {
+        display: none;
+    }
+
+    #appShell .domainHeader .copyGroupBtn.is-success .copyGroupSuccessIcon {
+        display: block;
+    }
+
+    #appShell.darkMode .domainHeader .copyGroupBtn.is-success {
+        color: #6fcf7a;
+        background: rgba(111, 207, 122, 0.15);
+        border-color: rgba(111, 207, 122, 0.4);
+    }
+
+    #appShell .domainContainer:not(.collapsed) .domainHeader {
+        padding-bottom: 6px;
+    }
+
+    #appShell .domainContainer.collapsed .domainHeader {
+        padding: 0;
+        border-bottom: 0;
+    }
+
+    #appShell .domainContainer.collapsed .overrideRules {
+        display: none;
+    }
+
+    #appShell .overrideRules {
+        margin: 6px 0 0 4px;
+        cursor: default;
+    }
+
+    #appShell .ruleContainer {
+        align-items: center;
+        margin: 4px 0;
+        padding: 4px;
+        background: var(--rule-bg);
+        border: 1px solid var(--rule-border);
+        border-radius: 6px;
+    }
+
+    #appShell .normalOverride {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr) 22px minmax(0, 1fr) 62px 34px;
+        gap: 6px;
+    }
+
+    #appShell .normalOverride .handle,
+    #appShell .normalOverride .rule,
+    #appShell .normalOverride .switch,
+    #appShell .normalOverride .delete {
+        min-width: 0;
+        margin: 0;
+    }
+
+    #appShell .normalOverride .urlFieldLabel {
+        display: block;
+        margin: 0 0 3px 2px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    #appShell .normalOverride .urlField input {
+        width: 100%;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 11px;
+    }
+
+    #appShell .normalOverride .directionArrow {
+        align-self: end;
+        padding-bottom: 10px;
+        color: var(--muted);
+        font-size: 16px;
+        text-align: center;
+    }
+
+    #appShell .handle {
+        padding: 0;
+        color: var(--muted);
+        cursor: ns-resize;
+        font-size: 14px;
+        letter-spacing: -3px;
+        text-align: center;
+    }
+
+    #appShell .handle::before {
+        content: "⋮⋮";
+    }
+
+    #appShell .handle .arrow-up,
+    #appShell .handle .arrow-down {
+        display: none;
+    }
+
+    #appShell input:not([type="checkbox"]),
+    #appShell select {
+        height: 30px;
+        padding: 0 8px;
+        color: var(--text);
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 5px;
+        box-shadow: var(--input-shadow);
+        outline: none;
+        -webkit-text-fill-color: var(--text);
+        caret-color: var(--text);
+    }
+
+    #appShell.darkMode input:not([type="checkbox"]),
+    #appShell.darkMode select,
+    #appShell.darkMode textarea {
+        color: #f2f3f5 !important;
+        background-color: #3a3d44 !important;
+        border-color: #8b919a !important;
+        -webkit-text-fill-color: #f2f3f5 !important;
+        caret-color: #f2f3f5 !important;
+        color-scheme: dark;
+    }
+
+    #appShell.darkMode input:not([type="checkbox"])::placeholder,
+    #appShell.darkMode textarea::placeholder {
+        color: #a4aab2 !important;
+        -webkit-text-fill-color: #a4aab2 !important;
+        opacity: 1;
+    }
+
+    #appShell.darkMode input:not([type="checkbox"]):-webkit-autofill,
+    #appShell.darkMode input:not([type="checkbox"]):-webkit-autofill:hover,
+    #appShell.darkMode input:not([type="checkbox"]):-webkit-autofill:focus {
+        -webkit-text-fill-color: #f2f3f5;
+        caret-color: #f2f3f5;
+        box-shadow: 0 0 0 1000px #3a3d44 inset;
+        transition: background-color 99999s ease-out;
+    }
+
+    #appShell input:not([type="checkbox"]):focus,
+    #appShell select:focus {
+        border-color: var(--accent);
+        box-shadow: var(--input-shadow), 0 0 0 3px var(--accent-soft);
+    }
+
+    #appShell .btn {
+        height: 30px;
+        padding: 0 10px;
+        color: var(--btn-text);
+        background: var(--btn-bg);
+        border: 1px solid var(--btn-border);
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(28, 48, 58, 0.06);
+        transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+    }
+
+    #appShell.darkMode .btn {
+        box-shadow: none;
+    }
+
+    #appShell .btn:hover {
+        background: var(--btn-hover-bg);
+        border-color: var(--border);
+    }
+
+    #appShell .btn:active {
+        transform: translateY(1px);
+    }
+
+    #appShell .btn:focus-visible {
+        outline: 3px solid var(--accent-soft);
+        outline-offset: 2px;
+    }
+
+    #appShell #addDomainBtn:hover {
+        background: var(--accent-hover);
+        border-color: var(--accent-hover);
+    }
+
+    #appShell .sym-btn {
+        padding: 0;
+        color: var(--danger);
+        font-size: 24px;
+        line-height: 30px;
+        background: transparent;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    #appShell .sym-btn:hover {
+        color: var(--danger);
+        background: var(--danger-hover-bg);
+        border-color: var(--danger-hover-border);
+    }
+
+    #appShell.darkMode .onoffswitch {
+        --toggle-track-off: #555a63;
+        --toggle-track-on: var(--accent);
+        --toggle-text-on: #ffffff;
+        --toggle-text-off: #eef1f4;
+        --toggle-thumb: #ffffff;
+    }
+
+    #appShell.darkMode .onoffswitch-checkbox:focus-visible + .onoffswitch-label .onoffswitch-track {
+        outline-color: rgba(91, 196, 207, 0.35);
+    }
+
+    #appShell.darkMode .suggestBox {
+        background: #32353c;
+        border-color: #34373e;
+        color: var(--text);
+        box-shadow: var(--popover-shadow);
+    }
+
+    #appShell.darkMode .suggestOption {
+        color: var(--text);
+    }
+
+    #appShell #addRuleDropdown {
+        padding: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: var(--popover-shadow);
+        color: var(--text);
+    }
+
+    #appShell #addRuleDropdown.reverse {
+        border: 1px solid var(--border);
+    }
+
+    body.darkMode #helpOverlay {
+        background: #2a2c31;
+        color: #f2f3f5;
+    }
+
+    body.darkMode #helpContent {
+        color: #f2f3f5;
+    }
+
+    body.darkMode #helpContent h1,
+    body.darkMode #helpContent h3 {
+        color: #f7f8f9;
+    }
+
+    body.darkMode #helpContent a {
+        color: #5bc4cf;
+    }
+
+    body.darkMode #helpContent .helpWarning {
+        color: #f07178;
+    }
+
+    body.darkMode #helpFooter {
+        border-top-color: #3f434a;
+        background: #33363c;
+    }
+
+    body.darkMode #helpContent table td,
+    body.darkMode #helpContent table th {
+        border-color: #4a4e56;
+    }
+
+    body.darkMode #helpContent .blue-hl {
+        background-color: rgba(91, 196, 207, 0.32);
+        color: #f2f3f5;
+    }
+
+    #helpFooter .btn,
+    #headerRuleFooter .btn {
+        height: 30px;
+        padding: 0 14px;
+        color: #31434c;
+        background: #ffffff;
+        border: 1px solid #c7d1d8;
+        border-radius: 6px;
+        box-shadow: none;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    #helpFooter .btn:hover,
+    #headerRuleFooter .btn:hover {
+        background: #f0f4f6;
+        border-color: #c7d1d8;
+    }
+
+    body.darkMode #helpFooter .btn,
+    body.darkMode #headerRuleFooter .btn {
+        color: #f2f3f5;
+        background: #3a3d44;
+        border-color: #555a63;
+    }
+
+    body.darkMode #helpFooter .btn:hover,
+    body.darkMode #headerRuleFooter .btn:hover {
+        background: #454951;
+        border-color: #555a63;
+    }
+
+    #appShell #domainDefs {
+        margin-top: 0;
+    }
+
+    #appShell #addDomain {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #appShell #addDomainBtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: #ffffff;
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: none;
+        font-weight: 700;
+    }
+
+    #appShell #addDomainBtn .addDomainIcon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }
+
+    #appShell #addDomainBtn .addDomainIcon circle,
+    #appShell #addDomainBtn .addDomainIcon line {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #appShell .btn,
+        #appShell .domainContainer,
+        #appShell .ruleContainer {
+            transition: none;
+        }
+    }
+</style>
+</head>
+<body id="body">
+<template id="onOffSwitchTemplate">
+    <div class="onoffswitch">
+        <input type="checkbox" class="onoffswitch-checkbox" checked>
+        <label class="onoffswitch-label">
+            <span class="onoffswitch-track" aria-hidden="true">
+                <span class="onoffswitch-text onoffswitch-text-on">ON</span>
+                <span class="onoffswitch-text onoffswitch-text-off">OFF</span>
+                <span class="onoffswitch-thumb"></span>
+            </span>
+        </label>
+    </div>
+</template>
+
+<template id="domainTemplate">
+    <div class="domainContainer collapsed" aria-expanded="false">
+        <div class="groupHandle" title="Drag to reorder group" aria-label="Drag to reorder group"></div>
+        <div class="domainHeader">
+            <div class="domainText">
+                Group:
+            </div>
+            <div class="domain">
+                <input type="input" class="domainMatchInput" placeholder="My Common Rules" aria-label="Group name">
+            </div>
+            <div class="addRule">
+                <button class="btn addRuleBtn">Add Rule</button>
+            </div>
+            <div class="switch"></div>
+            <div class="copy">
+                <button class="copyGroupBtn btn" type="button" title="Copy group" aria-label="Copy group">
+                    <svg class="copyGroupIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <svg class="copyGroupSuccessIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="delete">
+                <button class="deleteBtn btn sym-btn" title="Delete group" aria-label="Delete group">&#215;</button>
+            </div>
+        </div>
+        <div class="overrideRules">
+
+        </div>
+    </div>
+</template>
+
+<template id="overrideTemplate">
+    <div class="ruleContainer normalOverride">
+        <div class="handle" title="Drag to reorder">
+            <div class="arrow-up"></div><div class="arrow-down"></div>
+        </div>
+        <div class="rule urlField">
+            <label class="urlFieldLabel">From</label>
+            <input type="input" class="matchInput" placeholder="Match URL" aria-label="From URL">
+        </div>
+        <div class="directionArrow" aria-hidden="true">&rarr;</div>
+        <div class="rule urlField">
+            <label class="urlFieldLabel">To</label>
+            <input type="input" class="replaceInput" placeholder="Replace URL" aria-label="To URL">
+        </div>
+        <div class="switch"></div>
+        <div class="delete">
+            <button class="btn sym-btn" title="Delete rule" aria-label="Delete rule">&#215;</button>
+        </div>
+    </div>
+</template>
+
+<template id="fileOverrideTemplate">
+    <div class="ruleContainer fileOverride">
+        <div class="handle">
+            <div class="arrow-up"></div><div class="arrow-down"></div>
+        </div>
+        <div class="match">
+            From:
+        </div>
+        <div class="rule">
+            <input type="input" class="matchInput" placeholder="Match URL">
+        </div>
+        <div class="arrow">
+            To:
+        </div>
+        <div class="edit">
+            <button class="btn edit-btn">Edit File</button>
+        </div>
+        <div class="switch"></div>
+        <div class="delete">
+            <button class="btn sym-btn">&#215</button>
+        </div>
+    </div>
+</template>
+
+<template id="fileInjectTemplate">
+    <div class="ruleContainer fileInject">
+        <div class="handle">
+            <div class="arrow-up"></div><div class="arrow-down"></div>
+        </div>
+        <div class="match" style="flex-basis: 56px;">
+            Inject On:
+        </div>
+        <div class="rule">
+            <input type="input" class="matchInput" placeholder="Match URL">
+        </div>
+        <div class="match">
+            Name:
+        </div>
+        <div class="rule">
+            <input type="input" class="fileName" placeholder="File Name (Optional)">
+        </div>
+        <div class="typeText">
+            File Type:
+        </div>
+        <div class="fileType">
+            <select class="fileTypeSelect">
+                <option value="js">JS</option>
+                <option value="css">CSS</option>
+            </select>
+        </div>
+        <!-- <div class="injectText">
+            Inject into:
+        </div>
+        <div class="injectLocation">
+            <select class="injectLocationSelect">
+                <option value="head">Head</option>
+                <option value="body">Body</option>
+            </select>
+        </div> -->
+        <div class="edit">
+            <button class="btn edit-btn">Edit File</button>
+        </div>
+        <div class="switch"></div>
+        <div class="delete">
+            <button class="btn sym-btn">&#215</button>
+        </div>
+    </div>
+</template>
+
+<template id="headerRuleTemplate">
+    <div class="ruleContainer headerRule">
+        <div class="handle">
+            <div class="arrow-up"></div><div class="arrow-down"></div>
+        </div>
+        <div class="ruleType">
+            For:
+        </div>
+        <div class="rule">
+            <input type="input" class="matchInput" placeholder="Match URL">
+        </div>
+        <div class="rule">
+            <input type="input" class="requestRules headerRuleInput" placeholder="Request Headers (click to edit)" readonly="">
+        </div>
+        <div class="rule">
+            <input type="input" class="responseRules headerRuleInput" placeholder="Response Headers (click to edit)" readonly="">
+        </div>
+        <div class="edit">
+            <button class="btn edit-btn">Edit Headers</button>
+        </div>
+        <div class="switch"></div>
+        <div class="delete">
+            <button class="btn sym-btn">&#215</button>
+        </div>
+    </div>
+</template>
+
+<template id="headerEditorRuleTemplate">
+    <div class="ruleContainer headerEditorRule">
+        <div class="operation">
+            <select class="operationSelect">
+                <option value="set">Set</option>
+                <option value="remove">Remove</option>
+            </select>
+        </div>
+        <div class="headerLabel">
+            Header:
+        </div>
+        <div class="headerInputContainer">
+            <input type="input" class="headerName" placeholder="Header">
+        </div>
+        <div class="valueLabel">
+            Value:
+        </div>
+        <div class="headerInputContainer">
+            <input type="input" class="headerValue" placeholder="Value">
+        </div>
+        <div class="delete">
+            <button class="btn sym-btn">&#215</button>
+        </div>
+    </div>
+</template>
+
+<main id="appShell">
+    <header id="appHeader">
+        <div id="title">
+            <h1>ResourceOverrideRedesign</h1>
+        </div>
+
+        <div id="helpAndOptions">
+            <button id="expandAllGroupsBtn" class="btn headerActionBtn" type="button" data-mode="expand" title="Expand all" aria-label="Expand all">
+                <svg class="expandCollapseIcon iconExpand" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M15 3h6v6"></path>
+                    <path d="M9 21H3v-6"></path>
+                    <path d="M21 3l-7 7"></path>
+                    <path d="M3 21l7-7"></path>
+                </svg>
+                <svg class="expandCollapseIcon iconCollapse" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M4 14h6v6"></path>
+                    <path d="M14 4v6h6"></path>
+                    <path d="M14 10l7-7"></path>
+                    <path d="M3 21l7-7"></path>
+                </svg>
+            </button>
+            <button id="headerMenuBtn" class="btn headerMenuBtn" type="button" title="Menu" aria-label="Menu" aria-expanded="false" aria-haspopup="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="12" cy="5" r="1.8"></circle>
+                    <circle cx="12" cy="12" r="1.8"></circle>
+                    <circle cx="12" cy="19" r="1.8"></circle>
+                </svg>
+            </button>
+            <div id="headerMenuDropdown" class="headerMenuDropdown">
+                <button id="openDetailBtn" class="headerMenuItem" type="button" title="Open full options tab" aria-label="Open detail">
+                    <svg class="headerMenuIcon openDetailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    <span>Open detail</span>
+                </button>
+                <div class="headerMenuDivider"></div>
+                <div class="headerMenuToggle">
+                    <span class="headerMenuToggleMain">
+                        <svg class="headerMenuIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                        <span class="headerMenuToggleLabel">Show DevTools Tab</span>
+                    </span>
+                    <label class="menuPillToggle" for="showDevTools">
+                        <input type="checkbox" class="menuPillToggle-input" id="showDevTools">
+                        <span class="menuPillToggle-track" aria-hidden="true">
+                            <span class="menuPillToggle-thumb"></span>
+                        </span>
+                    </label>
+                </div>
+                <div class="headerMenuToggle">
+                    <span class="headerMenuToggleMain">
+                        <svg class="headerMenuIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+                        </svg>
+                        <span class="headerMenuToggleLabel">Dark mode</span>
+                    </span>
+                    <label class="menuPillToggle" for="darkMode">
+                        <input type="checkbox" class="menuPillToggle-input" id="darkMode">
+                        <span class="menuPillToggle-track" aria-hidden="true">
+                            <span class="menuPillToggle-thumb"></span>
+                        </span>
+                    </label>
+                </div>
+                <button id="saveRulesLink" class="headerMenuItem" type="button">
+                    <svg class="headerMenuIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M12 3v12"></path>
+                        <polyline points="8 11 12 15 16 11"></polyline>
+                        <path d="M5 21h14"></path>
+                    </svg>
+                    <span>Save Rules</span>
+                </button>
+                <button id="loadRulesLink" class="headerMenuItem" type="button">
+                    <svg class="headerMenuIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M12 19V7"></path>
+                        <polyline points="8 11 12 7 16 11"></polyline>
+                        <path d="M5 21h14"></path>
+                    </svg>
+                    <span>Load Rules</span>
+                </button>
+                <input type="file" class="fileInput" id="loadRulesInput" hidden>
+                <div class="headerMenuDivider"></div>
+                <button id="helpBtn" class="headerMenuItem" type="button">
+                    <svg class="headerMenuIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M9.5 9.2a2.4 2.4 0 1 1 4.2 1.5c-.7.6-1.2 1.1-1.2 2"></path>
+                        <circle cx="12" cy="17.2" r="0.8" fill="currentColor" stroke="none"></circle>
+                    </svg>
+                    <span>Help</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="domainDefs"></div>
+
+    <div id="addDomain">
+        <button id="addDomainBtn" class="btn" type="button">
+            <svg class="addDomainIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="9"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <span>Add Group</span>
+        </button>
+    </div>
+
+    <div id="addRuleDropdown">
+        <button id="addWebRuleBtn" class="btn" title="Redirect resources to other URLs">URL <span>&rarr;</span> URL</button>
+        <button id="addFileRuleBtn" class="btn" title="Redirect resources to a file you make">URL <span>&rarr;</span> File</button>
+        <button id="addInjectRuleBtn" class="btn" title="Inject content on a page">Inject File</button>
+        <button id="addHeaderRuleBtn" class="btn" title="Modify request or response headers">Change Headers</button>
+    </div>
+</main>
+
+<div id="editorOverlay" class="overlay">
+    <div id="editorOptions">
+        <div class="editorHeader">
+            <div class="titleContainer">
+                <span id="editLabel" class="bold">Editing file for match:</span> <span id="matchContainer" class="allowTextBreaks"></span>
+            </div>
+            <div class="settingsContainer">
+                Syntax:
+                <select id="syntaxSelect">
+                    <option value="html">HTML</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="css">CSS</option>
+                    <option value="xml">XML</option>
+                </select>
+            </div>
+            <div class="beautifyContainer">
+                <button id="findInEditor" class="btn">Find</button>
+                <button id="beautifyJS" class="btn">Beautify JS</button>
+            </div>
+        </div>
+        <div class="loadContainer">
+            <select id="loadSelect"></select>
+        </div>
+    </div>
+    <div id="editor"></div>
+    <div id="editorFooter">
+        <div class="left"><button id="fileCancelBtn" class="btn">Cancel</button></div>
+        <div class="right"><button id="fileSaveAndCloseBtn" class="btn">Save &amp; Close</button></div>
+        <div class="right"><button id="fileSaveBtn" class="btn">Save</button></div>
+    </div>
+</div>
+
+<div id="headerRuleOverlay" class="overlay">
+    <div id="headerRuleOptions">
+        <div class="titleContainer">
+            <span id="headerEditLabel" class="bold">Editing headers for match:</span> <span id="headerMatchContainer" class="allowTextBreaks"></span>
+        </div>
+        <div class="presetsContainer">
+            Presets:
+            <select id="headerPresetsSelect">
+                <option value="">--- Select ---</option>
+                <option value="cors">Enable CORS</option>
+                <option value="allowFrames">Allow Frames</option>
+                <option value="allowContent">Allow Outside Content</option>
+                <option value="noInline">Disable Inline Scripts</option>
+            </select>
+        </div>
+    </div>
+    <div class="headerRequestRules">
+        <h2>Request Headers</h2>
+        <div id="headerRequestRulesContainer"></div>
+        <button id="addRequestHeaderBtn" class="btn">Add Request Header Rule</button>
+    </div>
+    <div class="headerResponseRules">
+        <h2>Response Headers</h2>
+        <div id="headerResponseRulesContainer"></div>
+        <button id="addResponseHeaderBtn" class="btn">Add Response Header Rule</button>
+    </div>
+    <div id="headerRuleFooter">
+        <div class="right"><button id="closeHeaderRuleEditorBtn" class="btn">Close</button></div>
+    </div>
+</div>
+
+<div id="helpOverlay">
+    <div id="helpContent">
+        <h1>Help</h1>
+        <p>View youtube help video <a href="https://www.youtube.com/watch?v=62QIWAP9mMM" target="_blank">HERE</a>.
+        <p class="helpWarning">Sometimes browser cache can stop overrides from working! Try reloading while holding shift or empty your cache!</p>
+        <p>This extension exists to help you gain full control of any website by redirecting traffic, replacing, editing, or inserting new content. It does this by comparing url "match rules" to the current tab url and then individual resource urls. If the urls match, then the rules are applied.</p>
+        <p>Rules are put into "Tab Groups". A Tab Group has a URL text field that acts as the match pattern for Chrome's current tab. Rules inside the Tab Group wont apply unless the match is successful. This is a good way to make sure overrides only happen on a certain website.</p>
+        <h3>Example Tab URL Matches:</h3>
+        <table>
+        <tr><td><b>Tab Match URL</b></td><td></td><td><b>Browser Tab URL</b></td></tr>
+        <tr><td>http://www.example.com/</td><td>matches</td><td>http://www.example.com/</td></tr>
+        <tr><td>http://www.example.com/*</td><td>matches</td><td>http://www.example.com/some/path/info.txt</td></tr>
+        <tr><td>*example*</td><td>matches</td><td>https://www.something.com/example/in/path</td></tr>
+        <tr><td>*://www.example*/other/*</td><td>matches</td><td>https://www.example.org/some/other/path</td></tr>
+        <tr><td>*</td><td>matches</td><td>&lt;Any URL Here></td></tr>
+        </table>
+        <p>Rules use the same star syntax. Web rules get an extra ability with stars (more on that below).</p>
+        <p>A <b>Rule</b> can come in four different types:</p>
+        <ul>
+            <li><b>URL &rarr; URL</b>: Every request url is compared with the <i>Match URL</i> and then transformed into the <i>Replace URL</i> if the match is successful.</li>
+            <li><b>URL &rarr; File</b>: Every request url is compared with the <i>Match URL</i>. If the match succeeds, a file you create is supplied as the response.</li>
+            <li><b>Inject File</b>: A file you create will be injected into the page as a JS or CSS document.</li>
+            <li><b>Change Headers</b>: Modify request or response headers.</li>
+        </ul>
+        <p>Each resource can only be changed by the first rule that matches it, so rules higher on the page have more precedence. You can rearrange rules by dragging on the up and down triangles.</p>
+        <h3>Example URL &rarr; URL Patterns:</h3>
+        <p>Text highlighted in <span class='blue-hl'>blue</span> is "captured" in *'s.</p>
+        <table>
+        <tr><td><b>Match URL</b></td><td><b>Replace URL</b></td><td><b>Resource URL</b></td><td></td><td><b>Result URL</b></td></tr>
+        <tr><td>http://www.ex.com/neat.js</td><td>http://local:8080/cool.js</td><td>http://www.ex.com/neat.js</td><td class="rarrow">&rarr;</td><td>http://local:8080/cool.js</td></tr>
+        <tr><td>http://www.ex.com/js/*</td><td>http://local:8080/all.js</td><td>http://www.ex.com/js/<span class='blue-hl'>some.js</span></td><td class="rarrow">&rarr;</td><td>http://local:8080/all.js</td></tr>
+        <tr><td>http://www.ex.com/*.js</td><td>http://local:8080/*.js</td><td>http://www.ex.com/<span class='blue-hl'>captured_in_star</span>.js</td><td class="rarrow">&rarr;</td><td>http://local:8080/captured_in_star.js</td></tr>
+        <tr><td>http://*.ex.com/*</td><td>http://*.local:8080/*</td><td>http://<span class='blue-hl'>other</span>.ex.com/<span class='blue-hl'>second_capture.js</span></td><td class="rarrow">&rarr;</td><td>http://other.local:8080/second_capture.js</td></tr>
+        <tr><td>*/js/**.js</td><td>http://local:8080/code/**.js</td><td><span class='blue-hl'>http://any.com</span>/js/<span class='blue-hl'>2stars</span>.js</td><td class="rarrow">&rarr;</td><td>http://local:8080/code/2stars.js</td></tr>
+        <tr><td>http://ex.com/*/**/***.js</td><td>http://local:8080/**/*/***.js</td><td>http://ex.com/<span class='blue-hl'>a</span>/<span class='blue-hl'>b</span>/<span class='blue-hl'>c</span>.js</td><td class="rarrow">&rarr;</td><td>http://local:8080/b/a/c.js</td></tr>
+        </table>
+        <p>When using the <i>URL &rarr; URL</i> rule, you can "store" parts of the resource URL in stars (*) and then reuse the stored part in the replace url with the same number of stars. Stars can capture parts of the url more than once - each new capture is put into a "queue" (See the 3rd to last example). If you need to be specific where stored parts of the url are placed, you can use multiple stars together (**) to 'create another variable'. You can also use this technique to throw away parts of a url you don't care about (you don't have to use the corresponding stars in the replace url). Examples of these can be seen in the above table.</p>
+        <h3>Tips and Tricks</h3>
+        <p>I highly recommend that you use this extension through Chrome's dev tools panel (right click somewhere on a page and click "Inspect". Then go to the "Overrides" tab). The dev tools view can help you make your url match rules correctly with a suggest feature.</p>
+        <p>Do you need to override https content with a URL &rarr; URL rule and content on your computer? Make sure you have an https server! Also make sure that if ajax calls are being used that your https server has CORS turned on. Finally, don't forget to check that you can browse to your https content and "Proceed Anyway" if chrome yells at you about an untrusted certificate (Or you can just add the certificate to your system's trusted certificates). I like to use <a target="_blank" href="https://github.com/kylepaulsen/http-server">this<a/> http(s) server (it auto generates ssl certificates and has CORS turned on by default).</p>
+        <p>If you are having trouble getting a rule to work, try turning on the logs (open the menu at the top of this page and check "Show Logs"). Then reload the page and look in Chrome's console for the url you are trying to match. If a match succeeds, the <span class="blue-hl">text highlight will be blue</span>. If all else fails, try to make your rule less strict: *something* &lt;-- In this case, "something" just has to show up somewhere in the url.</p>
+        <p>A URL &rarr; File rule needs to be paired with a mime type. This extension tries to guess the correct mime type based off of the resource url and the content you supply. If your files aren't loading and Chrome is giving you trouble about content arriving with the wrong mime type, it means that this extension couldn't automatically detect the correct mime type and you may need to provide it yourself. Here is an example of how to do this: If you have a JavaScript file, you would put <span style="font-family: courier">/* mime: text/javascript */</span> on the very first line of the file. You can force any mime type you want as long as it's on the very first line of the file and in that format.</p>
+        <p>If you think you've found a bug and want to report it, please create an issue on the github page here: <a target="_blank" href="https://github.com/kylepaulsen/ResourceOverride/tree/mv3">https://github.com/kylepaulsen/ResourceOverride/tree/mv3</a>. I am much, much more likely to see bug reports there than on the Web Store (they don't have email alerts). Also feel free to contribute if you'd like. :)</p>
+    </div>
+    <div id="helpFooter">
+        <div class="right"><button id="helpCloseBtn" class="btn">Close</button></div>
+    </div>
+</div>
+
+<div id="tabPageNotice" class="toast fadeOut">
+The devtools tab has more features that aren't avilable on the options page. <a href="#">OK</a>
+</div>
+
+<div id="generalToast" class="toast fadeOut"></div>
+
+<div id="debug"></div>
+
+<!-- Library stuff -->
+<script src="../lib/beautify.min.js"></script>
+
+<script src="../lib/ace/ace.js"></script>
+<script src="../lib/ace/theme-monokai.js"></script>
+<script src="../lib/ace/ext-searchbox.js"></script>
+<script src="../lib/ace/mode-javascript.js"></script>
+<script src="../lib/ace/mode-html.js"></script>
+<script src="../lib/ace/mode-css.js"></script>
+<script src="../lib/ace/mode-xml.js"></script>
+<script src="../lib/ace/worker-javascript.js"></script>
+<script src="../lib/ace/worker-html.js"></script>
+<script src="../lib/ace/worker-css.js"></script>
+<script src="../lib/ace/worker-xml.js"></script>
+
+<!-- Main Src -->
+<script src="devtoolstab.js" type="module"></script>
+</body>
+</html>

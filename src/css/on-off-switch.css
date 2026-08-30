@@ -1,0 +1,112 @@
+.onoffswitch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    width: 54px;
+    user-select: none;
+    --toggle-track-off: #8a9199;
+    --toggle-track-on: #087f8c;
+    --toggle-text-on: #ffffff;
+    --toggle-text-off: #ffffff;
+    --toggle-thumb: #ffffff;
+}
+
+input[type="checkbox"].onoffswitch-checkbox {
+    position: absolute;
+    width: 54px;
+    height: 24px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.onoffswitch-label {
+    display: block;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.onoffswitch-track {
+    position: relative;
+    display: block;
+    width: 54px;
+    height: 24px;
+    border-radius: 999px;
+    background: var(--toggle-track-off);
+    transition: background-color 0.2s ease;
+    overflow: hidden;
+}
+
+.onoffswitch-text {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.15s ease;
+}
+
+.onoffswitch-text-on {
+    left: 8px;
+    color: var(--toggle-text-on);
+    opacity: 0;
+}
+
+.onoffswitch-text-off {
+    right: 6px;
+    color: var(--toggle-text-off);
+    opacity: 1;
+}
+
+.onoffswitch-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--toggle-thumb);
+    box-shadow: 0 1px 2px rgba(28, 48, 58, 0.18);
+    transition: transform 0.2s ease;
+    z-index: 1;
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-track {
+    background: var(--toggle-track-on);
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-text-on {
+    opacity: 1;
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-text-off {
+    opacity: 0;
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-thumb {
+    transform: translateX(30px);
+}
+
+.onoffswitch-checkbox:focus-visible + .onoffswitch-label .onoffswitch-track {
+    outline: 2px solid rgba(8, 127, 140, 0.35);
+    outline-offset: 2px;
+}
+
+.onoffswitch-inner,
+.onoffswitch-on,
+.onoffswitch-off,
+.onoffswitch-switch {
+    display: none;
+}
