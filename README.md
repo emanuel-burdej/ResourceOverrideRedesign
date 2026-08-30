@@ -1,21 +1,24 @@
 # ResourceOverrideRedesign
 
-Redesign of the unfinished [Resource Override MV3](https://github.com/kylepaulsen/ResourceOverride/tree/mv3) branch.
+Redesign of ResourceOverride-mv3. An extension that gives you full control over any website by redirecting traffic, replacing or editing content, and inserting new content.
 
-Redirect, replace, edit, or inject web content. See [`CHANGELOG.md`](CHANGELOG.md) for what’s new in this fork.
+Based on [kylepaulsen/ResourceOverride](https://github.com/kylepaulsen/ResourceOverride/tree/mv3) (`mv3`).
 
 ## How to install
 
-1. Download the **ZIP** from this repository’s **latest release** (GitHub → Releases).
+1. Download the **ZIP** from the [latest release](https://github.com/emanuel-burdej/ResourceOverrideRedesign/releases).
 2. Unzip it somewhere on your computer.
 3. Open Chrome → **Extensions** (`chrome://extensions`).
 4. Turn on **Developer mode**.
 5. Click **Load unpacked** and select the unzipped folder.
 6. **Pin** the extension from the Chrome toolbar puzzle icon.
 
+## Changelog
+
+See [`CHANGELOG.md`](CHANGELOG.md).
+
 ## License
 
 MIT — see [`LICENSE`](LICENSE).
 
-Original work © 2014 [Kyle Paulsen](https://github.com/kylepaulsen).  
-Fork changes © 2026 the fork contributors.
+Original work by [Kyle Paulsen](https://github.com/kylepaulsen) / [Resource Override](https://github.com/kylepaulsen/ResourceOverride).
