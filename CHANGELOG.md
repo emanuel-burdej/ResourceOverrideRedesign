@@ -4,6 +4,12 @@ All notable changes in **ResourceOverrideRedesign** compared to the upstream [ky
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.0.1] - 2026-09-15
+
+### Added
+
+- URL fields highlight as invalid when the value starts with a space, with a tooltip asking to remove it.
+
 ## [2.0.0] - 2026-08-30
 
 First public redesign release of this fork.
