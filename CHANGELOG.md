@@ -4,6 +4,12 @@ All notable changes in **ResourceOverrideRedesign** compared to the upstream [ky
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.0.2] - 2026-09-15
+
+### Changed
+
+- Toolbar popup width increased to Chrome’s maximum (800px). Height remains at the maximum (600px).
+
 ## [2.0.1] - 2026-09-15
 
 ### Added

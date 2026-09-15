@@ -1,6 +1,6 @@
 {
   "name": "ResourceOverrideRedesign",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Redesign of ResourceOverride-mv3. An extension that gives you full control over any website by redirecting traffic, replacing or editing content, and inserting new content.",
   "icons": {
     "16": "icons/icon-16x16.png",
