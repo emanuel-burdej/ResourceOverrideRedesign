@@ -32,8 +32,16 @@ export const createEl = (tagWithClasses, attrs = {}) => {
     return newEl;
 };
 
+const LEADING_SPACE_MSG = "URL starts with a space. Remove the leading space.";
+
+export const hasLeadingSpace = (value) => /^\s/.test(value || "");
+
 export const syncInputTitle = (input) => {
     const updateTitle = () => {
+        if (hasLeadingSpace(input.value)) {
+            input.title = LEADING_SPACE_MSG;
+            return;
+        }
         input.title = input.value;
     };
     updateTitle();
@@ -189,10 +197,23 @@ export const getNextRuleId = (ruleGroups) => {
 
 export const makeFieldRequired = (input) => {
     const checkRequiredField = () => {
-        if (input.value === "") {
+        const value = input.value;
+        if (value === "") {
             input.style.background = "#faa";
+            input.removeAttribute("aria-invalid");
+            if (input.title === LEADING_SPACE_MSG) {
+                input.title = "";
+            }
+        } else if (hasLeadingSpace(value)) {
+            input.style.background = "#faa";
+            input.title = LEADING_SPACE_MSG;
+            input.setAttribute("aria-invalid", "true");
         } else {
-            input.style.background = "#fff";
+            input.style.background = "";
+            input.removeAttribute("aria-invalid");
+            if (input.title === LEADING_SPACE_MSG) {
+                input.title = value;
+            }
         }
     };
     input.addEventListener("input", checkRequiredField);
